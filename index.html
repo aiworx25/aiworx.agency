@@ -1,738 +1,753 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AIWorx | AI Automation for Des Moines Service Businesses</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink:#0B2545;
-    --blue:#1B6FC9;
-    --blue-dark:#124F94;
-    --blue-tint:#EAF2FC;
-    --green:#1F9D6B;
-    --green-tint:#E6F7EF;
-    --paper:#FAFAF9;
-    --slate:#48566A;
-    --slate-light:#7C8AA0;
-    --white:#FFFFFF;
-    --line:#E1E8F0;
-    --radius:14px;
-    --shadow:0 1px 2px rgba(11,37,69,0.04);
-    --shadow-lift:0 18px 40px -14px rgba(11,37,69,0.22);
-  }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Inter',sans-serif;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-  h1,h2,h3,h4{
-    font-family:'Space Grotesk',sans-serif;
-    margin:0;
-    color:var(--ink);
-    letter-spacing:-0.01em;
-  }
-  p{margin:0;color:var(--slate);line-height:1.6;}
-  a{text-decoration:none;color:inherit;}
-  .mono{font-family:'IBM Plex Mono',monospace;}
-  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
-  section{position:relative;}
-  ::selection{background:var(--green-tint);color:var(--ink);}
-
-  /* scroll reveal */
-  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease;}
-  .reveal.in{opacity:1;transform:translateY(0);}
-
-  /* NAV */
-  header.nav{
-    position:sticky;top:0;z-index:100;
-    background:rgba(250,250,249,0.86);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line);
-  }
-  .nav-inner{
-    max-width:1180px;margin:0 auto;padding:16px 32px;
-    display:flex;align-items:center;justify-content:space-between;
-  }
-  .logo{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;color:var(--ink);}
-  .logo-mark{
-    width:30px;height:30px;border-radius:8px;
-    background:linear-gradient(135deg,var(--blue),var(--green));
-    display:flex;align-items:center;justify-content:center;
-    flex-shrink:0;
-  }
-  .logo-mark span{color:#fff;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;}
-  nav.links{display:flex;gap:30px;align-items:center;}
-  nav.links a{font-size:14.5px;font-weight:500;color:var(--slate);transition:color .2s;}
-  nav.links a:hover{color:var(--blue);}
-  .btn{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:12px 22px;border-radius:999px;
-    font-weight:600;font-size:14.5px;
-    cursor:pointer;border:none;
-    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
-    white-space:nowrap;
-  }
-  .btn-primary{background:var(--blue);color:#fff;box-shadow:0 8px 20px -8px rgba(27,111,201,0.55);}
-  .btn-primary:hover{background:var(--blue-dark);transform:translateY(-2px);box-shadow:0 12px 26px -8px rgba(27,111,201,0.6);}
-  .btn-primary:active{transform:translateY(0);}
-  .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);}
-  .btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
-  .btn-sm{padding:9px 16px;font-size:13.5px;}
-  .nav-cta{display:flex;align-items:center;gap:14px;}
-  .burger{display:none;}
-
-  /* HERO */
-  .hero{padding:96px 0 80px;overflow:hidden;}
-  .hero-inner{display:grid;grid-template-columns:1.05fr 0.95fr;gap:56px;align-items:center;}
-  .eyebrow{
-    display:inline-flex;align-items:center;gap:8px;
-    background:var(--blue-tint);color:var(--blue-dark);
-    font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:500;
-    padding:7px 14px;border-radius:999px;margin-bottom:22px;
-    letter-spacing:0.02em;
-  }
-  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.8s infinite;}
-  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
-  .hero h1{font-size:52px;line-height:1.06;font-weight:700;margin-bottom:22px;}
-  .hero h1 em{font-style:normal;color:var(--blue);}
-  .hero p.lead{font-size:18px;max-width:480px;margin-bottom:34px;}
-  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:36px;}
-  .hero-trust{display:flex;gap:26px;flex-wrap:wrap;}
-  .hero-trust div{display:flex;flex-direction:column;}
-  .hero-trust .num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;color:var(--ink);}
-  .hero-trust .lbl{font-size:12.5px;color:var(--slate-light);margin-top:2px;}
-
-  /* CALL LOG WIDGET */
-  .calllog{
-    background:var(--ink);
-    border-radius:20px;
-    padding:22px;
-    box-shadow:var(--shadow-lift);
-    position:relative;
-  }
-  .calllog::before{
-    content:"";position:absolute;inset:-1px;border-radius:20px;padding:1px;
-    background:linear-gradient(135deg,rgba(31,157,107,0.5),rgba(27,111,201,0.2),transparent 60%);
-    -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;
-  }
-  .calllog-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
-  .calllog-title{color:#fff;font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:0.03em;opacity:0.85;}
-  .calllog-clock{color:var(--green);font-family:'IBM Plex Mono',monospace;font-size:12.5px;}
-  .calllog-body{display:flex;flex-direction:column;gap:8px;min-height:238px;}
-  .call-row{
-    display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;
-    background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
-    border-radius:10px;padding:11px 13px;
-    opacity:0;transform:translateX(-8px);
-    animation:rowin .5s ease forwards;
-  }
-  .call-row .t{color:rgba(255,255,255,0.45);font-family:'IBM Plex Mono',monospace;font-size:11.5px;}
-  .call-row .desc{color:#fff;font-size:13px;font-weight:500;}
-  .call-row .sub{color:rgba(255,255,255,0.45);font-size:11.5px;margin-top:1px;}
-  .call-row .status{display:flex;align-items:center;gap:6px;color:var(--green);font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;}
-  .call-row .status svg{width:13px;height:13px;}
-  @keyframes rowin{to{opacity:1;transform:translateX(0);}}
-  .calllog-foot{
-    margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);
-    display:flex;justify-content:space-between;align-items:center;
-  }
-  .calllog-foot .big{color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;}
-  .calllog-foot .lbl{color:rgba(255,255,255,0.5);font-size:11.5px;margin-top:2px;}
-  .calllog-foot .zero{color:var(--green);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;}
-
-  /* SECTION HEADERS */
-  .sec-head{max-width:620px;margin:0 auto 56px;text-align:center;}
-  .sec-eyebrow{
-    font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--blue);
-    text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;display:block;font-weight:500;
-  }
-  .sec-head h2{font-size:34px;line-height:1.18;}
-  .sec-head p{margin-top:14px;font-size:16px;}
-
-  /* PROBLEMS */
-  .problems{padding:100px 0;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-  .problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
-  .problem-card{
-    border:1px solid var(--line);border-radius:var(--radius);padding:28px 26px;
-    background:var(--paper);transition:transform .25s ease, box-shadow .25s ease;
-  }
-  .problem-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift);}
-  .problem-icon{
-    width:42px;height:42px;border-radius:10px;background:var(--blue-tint);
-    display:flex;align-items:center;justify-content:center;margin-bottom:18px;color:var(--blue);
-  }
-  .problem-card h3{font-size:18.5px;margin-bottom:10px;}
-  .problem-card p{font-size:14.5px;}
-
-  /* SERVICES */
-  .services{padding:100px 0;}
-  .service-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
-  .service-card{
-    border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px;
-    background:#fff;transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-  }
-  .service-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lift);border-color:transparent;}
-  .service-icon{
-    width:44px;height:44px;border-radius:11px;margin-bottom:20px;
-    display:flex;align-items:center;justify-content:center;color:#fff;
-  }
-  .service-card:nth-child(1) .service-icon{background:var(--blue);}
-  .service-card:nth-child(2) .service-icon{background:var(--green);}
-  .service-card:nth-child(3) .service-icon{background:var(--ink);}
-  .service-card:nth-child(4) .service-icon{background:linear-gradient(135deg,var(--blue),var(--green));}
-  .service-card h3{font-size:17px;margin-bottom:9px;}
-  .service-card p{font-size:13.8px;}
-
-  /* WORKFLOW - feature list + steps */
-  .workflow{padding:100px 0;background:var(--ink);color:#fff;}
-  .workflow .sec-head h2{color:#fff;}
-  .workflow .sec-head p{color:rgba(255,255,255,0.6);}
-  .wf-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 32px;max-width:840px;margin:0 auto 72px;}
-  .wf-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.08);}
-  .wf-item .check{
-    width:24px;height:24px;border-radius:50%;background:rgba(31,157,107,0.18);
-    display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green);
-  }
-  .wf-item span{font-size:14.5px;color:rgba(255,255,255,0.88);font-weight:500;}
-
-  .flow-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;}
-  .flow-steps::before{
-    content:"";position:absolute;top:23px;left:12.5%;right:12.5%;height:1px;
-    background:repeating-linear-gradient(90deg, rgba(255,255,255,0.25) 0 6px, transparent 6px 12px);
-  }
-  .flow-step{padding:0 16px;text-align:center;position:relative;}
-  .flow-num{
-    width:46px;height:46px;border-radius:50%;background:var(--ink);border:1.5px solid var(--green);
-    display:flex;align-items:center;justify-content:center;margin:0 auto 20px;position:relative;z-index:2;
-    font-family:'IBM Plex Mono',monospace;color:var(--green);font-size:14px;
-  }
-  .flow-step h4{color:#fff;font-size:15.5px;margin-bottom:8px;}
-  .flow-step p{font-size:13px;color:rgba(255,255,255,0.55);}
-
-  /* COMPARISON */
-  .compare{padding:100px 0;}
-  .compare-table{
-    max-width:820px;margin:0 auto;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;
-  }
-  .compare-row{display:grid;grid-template-columns:1.4fr 1fr 1fr;}
-  .compare-row.head div{font-family:'IBM Plex Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;padding:18px 20px;font-weight:500;}
-  .compare-row.head .c1{background:var(--paper);color:var(--slate-light);}
-  .compare-row.head .c2{background:var(--ink);color:#fff;}
-  .compare-row.head .c3{background:var(--paper);color:var(--slate-light);}
-  .compare-row:not(.head){border-top:1px solid var(--line);}
-  .compare-row:not(.head) div{padding:16px 20px;font-size:14px;display:flex;align-items:center;gap:8px;}
-  .compare-row:not(.head) .c1{color:var(--ink);font-weight:500;}
-  .compare-row:not(.head) .c2{background:var(--green-tint);color:var(--ink);}
-  .compare-row:not(.head) .c3{color:var(--slate-light);}
-  .yes{color:var(--green);flex-shrink:0;}
-  .no{color:#C94B4B;flex-shrink:0;}
-
-  /* PROCESS */
-  .process{padding:100px 0;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-  .process-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:920px;margin:0 auto;}
-  .process-step{text-align:center;position:relative;}
-  .process-step .n{
-    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:44px;
-    color:var(--blue-tint); -webkit-text-stroke:1.5px var(--blue); margin-bottom:14px;
-  }
-  .process-step h3{font-size:18px;margin-bottom:10px;}
-  .process-step p{font-size:14px;max-width:230px;margin:0 auto;}
-  .process-arrow{position:absolute;top:26px;right:-24px;color:var(--line);display:none;}
-
-  /* STATS */
-  .stats{padding:70px 0;background:var(--blue-tint);}
-  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;}
-  .stat .num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:38px;color:var(--blue-dark);}
-  .stat .lbl{font-size:13.5px;color:var(--slate);margin-top:6px;}
-
-  /* TESTIMONIALS */
-  .testimonials{padding:100px 0;}
-  .test-track{position:relative;max-width:720px;margin:0 auto;min-height:200px;}
-  .test-card{
-    position:absolute;inset:0;opacity:0;transition:opacity .5s ease;
-    border:1px solid var(--line);border-radius:18px;padding:40px 44px;background:#fff;text-align:center;
-  }
-  .test-card.active{opacity:1;position:relative;}
-  .test-card .stars{color:var(--green);font-size:16px;margin-bottom:18px;letter-spacing:3px;}
-  .test-card p.quote{font-size:18px;color:var(--ink);font-weight:500;line-height:1.55;margin-bottom:22px;}
-  .test-card .who{font-size:13.5px;color:var(--slate-light);font-family:'IBM Plex Mono',monospace;}
-  .test-dots{display:flex;justify-content:center;gap:8px;margin-top:26px;}
-  .test-dots button{width:8px;height:8px;border-radius:50%;border:none;background:var(--line);cursor:pointer;padding:0;transition:background .2s;}
-  .test-dots button.active{background:var(--blue);width:22px;border-radius:5px;}
-
-  /* FAQ */
-  .faq{padding:100px 0;background:#fff;border-top:1px solid var(--line);}
-  .faq-list{max-width:720px;margin:0 auto;}
-  .faq-item{border-bottom:1px solid var(--line);}
-  .faq-q{
-    width:100%;text-align:left;background:none;border:none;cursor:pointer;
-    padding:22px 4px;display:flex;justify-content:space-between;align-items:center;gap:20px;
-    font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:var(--ink);
-  }
-  .faq-q .plus{width:22px;height:22px;flex-shrink:0;position:relative;}
-  .faq-q .plus::before,.faq-q .plus::after{content:"";position:absolute;background:var(--blue);border-radius:2px;transition:transform .25s ease;}
-  .faq-q .plus::before{width:14px;height:2px;top:10px;left:4px;}
-  .faq-q .plus::after{width:2px;height:14px;left:10px;top:4px;}
-  .faq-item.open .plus::after{transform:rotate(90deg);opacity:0;}
-  .faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease;}
-  .faq-a p{padding:0 4px 22px;font-size:14.5px;max-width:640px;}
-
-  /* FINAL CTA */
-  .final-cta{padding:100px 0;text-align:center;background:linear-gradient(160deg,var(--ink), #0F3060 60%, var(--blue-dark));position:relative;overflow:hidden;}
-  .final-cta::before{
-    content:"";position:absolute;width:600px;height:600px;border-radius:50%;
-    background:radial-gradient(circle, rgba(31,157,107,0.18), transparent 70%);
-    top:-260px;right:-160px;
-  }
-  .final-cta h2{color:#fff;font-size:36px;max-width:640px;margin:0 auto 16px;position:relative;}
-  .final-cta p{color:rgba(255,255,255,0.65);max-width:480px;margin:0 auto 34px;position:relative;}
-  .final-cta .btn-primary{position:relative;padding:16px 34px;font-size:15.5px;}
-
-  /* FOOTER */
-  footer{padding:56px 0 34px;background:var(--paper);}
-  .footer-top{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;margin-bottom:44px;}
-  .footer-brand p{font-size:13.5px;margin-top:14px;max-width:280px;}
-  .footer-col h4{font-size:13px;text-transform:uppercase;letter-spacing:0.05em;color:var(--slate-light);margin-bottom:16px;font-family:'IBM Plex Mono',monospace;font-weight:500;}
-  .footer-col a, .footer-col p{display:block;font-size:14px;color:var(--slate);margin-bottom:10px;}
-  .footer-col a:hover{color:var(--blue);}
-  .footer-bottom{
-    display:flex;justify-content:space-between;align-items:center;
-    padding-top:24px;border-top:1px solid var(--line);
-    font-size:12.5px;color:var(--slate-light);flex-wrap:wrap;gap:12px;
-  }
-  .socials{display:flex;gap:14px;}
-  .socials a{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--slate);transition:all .2s;}
-  .socials a:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
-
-  @media(max-width:900px){
-    .hero-inner{grid-template-columns:1fr;}
-    .hero h1{font-size:38px;}
-    nav.links{display:none;}
-    .problem-grid,.service-grid{grid-template-columns:1fr 1fr;}
-    .wf-grid{grid-template-columns:1fr;}
-    .flow-steps{grid-template-columns:1fr 1fr;gap:32px 0;}
-    .flow-steps::before{display:none;}
-    .process-steps{grid-template-columns:1fr;}
-    .stats-grid{grid-template-columns:1fr 1fr;gap:32px 16px;}
-    .compare-row{grid-template-columns:1fr;}
-    .compare-row.head{display:none;}
-    .compare-row:not(.head) div{padding:10px 20px;}
-    .footer-top{grid-template-columns:1fr;gap:28px;}
-  }
-  @media(max-width:560px){
-    .service-grid,.problem-grid{grid-template-columns:1fr;}
-    .hero{padding:64px 0 56px;}
-    .wrap{padding:0 20px;}
-  }
-  @media (prefers-reduced-motion: reduce){
-    *{animation:none !important; transition:none !important;}
-  }
-</style>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>AIWorx - AI Automation Agency for Service Businesses</title>
+   <!-- Tailwind CSS CDN -->
+   <script src="https://cdn.tailwindcss.com"></script>
+   <!-- Google Fonts - Inter -->
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+   <style>
+       body {
+           font-family: 'Inter', sans-serif;
+           background-color: #f9fafb; /* Light gray background */
+           color: #1f2937; /* Dark text color */
+       }
+       /* Custom gradient for buttons and hero section - Updated to teal-to-purple from logo, toned down */
+       .gradient-bg {
+           background: linear-gradient(to right, #4DD0E1, #9C27B0); /* Toned-down Teal to Toned-down Purple */
+       }
+       .gradient-text {
+           background: linear-gradient(to right, #4DD0E1, #9C27B0); /* Toned-down Teal to Toned-down Purple */
+           -webkit-background-clip: text;
+           -webkit-text-fill-color: transparent;
+       }
+       .gradient-button {
+           background: linear-gradient(to right, #4DD0E1, #9C27B0); /* Toned-down Teal to Toned-down Purple */
+           transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+           display: flex; /* Use flexbox for centering content */
+           align-items: center; /* Vertically center */
+           justify-content: center; /* Horizontally center */
+       }
+       .gradient-button:hover {
+           transform: translateY(-3px);
+           box-shadow: 0 10px 20px rgba(77, 208, 225, 0.4); /* Shadow based on teal */
+       }
+       .section-separator {
+           height: 1px;
+           background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+           margin: 4rem auto;
+           width: 80%;
+       }
+       /* Custom extra-extra-small font size for pricing text */
+       .text-xxs {
+           font-size: 0.525rem; /* Approximately 30% smaller than text-xs (0.75rem) */
+       }
+   </style>
 </head>
-<body>
-
-<header class="nav">
-  <div class="nav-inner">
-    <div class="logo"><div class="logo-mark"><span>AI</span></div>AIWorx</div>
-    <nav class="links">
-      <a href="#services">Services</a>
-      <a href="#process">Process</a>
-      <a href="#results">Results</a>
-      <a href="#testimonials">Testimonials</a>
-      <a href="#faq">FAQ</a>
-    </nav>
-    <div class="nav-cta">
-      <a href="#book" class="btn btn-primary btn-sm">Book Free Consult</a>
-    </div>
-  </div>
-</header>
-
-<section class="hero">
-  <div class="wrap hero-inner">
-    <div class="reveal in">
-      <div class="eyebrow"><span class="dot"></span> Serving Greater Des Moines, IA</div>
-      <h1>Empower your business with <em>AI automation</em></h1>
-      <p class="lead">AIWorx builds AI voice agents, text-back systems, and reputation automation for service businesses ready to stop losing calls to voicemail — and start scaling past $50k/month.</p>
-      <div class="hero-ctas">
-        <a href="#book" class="btn btn-primary">Schedule Free Consultation</a>
-        <a href="#workflow" class="btn btn-ghost">See How It Works</a>
-      </div>
-      <div class="hero-trust">
-        <div><span class="num">10+ hrs</span><span class="lbl">saved per week</span></div>
-        <div><span class="num">24/7</span><span class="lbl">call &amp; text coverage</span></div>
-        <div><span class="num">Top 3</span><span class="lbl">Map Pack rankings</span></div>
-      </div>
-    </div>
-
-    <div class="reveal in">
-      <div class="calllog">
-        <div class="calllog-head">
-          <span class="calllog-title mono">// LIVE CALL ACTIVITY</span>
-          <span class="calllog-clock mono" id="clock">2:47 AM</span>
-        </div>
-        <div class="calllog-body" id="callBody"></div>
-        <div class="calllog-foot">
-          <div><div class="big" id="answeredCount">0</div><div class="lbl">calls answered this month</div></div>
-          <div style="text-align:right"><div class="zero">0</div><div class="lbl">calls missed</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="problems reveal">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-eyebrow">Sound familiar?</span>
-      <h2>Every unanswered call, unread review, and stale webpage costs you the next job.</h2>
-    </div>
-    <div class="problem-grid">
-      <div class="problem-card">
-        <div class="problem-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        </div>
-        <h3>Missed calls, missed revenue</h3>
-        <p>Customers don't leave voicemails anymore. They hang up and call the next name on Google — usually a competitor.</p>
-      </div>
-      <div class="problem-card">
-        <div class="problem-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"/><path d="M12 8v4l2.5 2.5"/></svg>
-        </div>
-        <h3>Reviews piling up</h3>
-        <p>Slow responses to reviews quietly sink your Map Pack ranking — right when local competitors are climbing past you.</p>
-      </div>
-      <div class="problem-card">
-        <div class="problem-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>
-        </div>
-        <h3>Website standing still</h3>
-        <p>If your site and marketing haven't changed in a year, neither has your lead flow — while AI-forward competitors pull ahead.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="services reveal" id="services">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-eyebrow">What we build</span>
-      <h2>Four systems. One less thing to manage.</h2>
-      <p>Each one plugs into how your business already runs — no rip-and-replace, no new phone number to memorize.</p>
-    </div>
-    <div class="service-grid">
-      <div class="service-card">
-        <div class="service-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-        <h3>SMS Text-Back Automation</h3>
-        <p>Every missed call gets an instant text reply, so a hang-up turns into a booked job instead of a lost lead.</p>
-      </div>
-      <div class="service-card">
-        <div class="service-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div>
-        <h3>Reputation &amp; Map Pack Ranking</h3>
-        <p>Automated review requests and responses build a steady stream of 5-star reviews — and keep you visible in local search.</p>
-      </div>
-      <div class="service-card">
-        <div class="service-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg></div>
-        <h3>AI Voice Agents</h3>
-        <p>A natural-sounding agent answers every call day or night, books appointments, and escalates real emergencies to you.</p>
-      </div>
-      <div class="service-card">
-        <div class="service-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2l3 6 6 1-4.5 4.5L17.5 20 12 17l-5.5 3 1-6.5L3 9l6-1z"/></svg></div>
-        <h3>Custom AI Workflows</h3>
-        <p>From invoicing follow-ups to lead nurturing, we automate the repetitive tasks eating into your week.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="workflow reveal" id="workflow">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-eyebrow">Everything included</span>
-      <h2>A complete, hands-off workflow</h2>
-      <p>No dashboards to babysit — the system runs, and reports back.</p>
-    </div>
-    <div class="wf-grid">
-      <div class="wf-item"><div class="check">✓</div><span>24/7 availability, nights &amp; weekends included</span></div>
-      <div class="wf-item"><div class="check">✓</div><span>Seamless appointment booking</span></div>
-      <div class="wf-item"><div class="check">✓</div><span>Automated review requests &amp; responses</span></div>
-      <div class="wf-item"><div class="check">✓</div><span>Lower costs, higher efficiency</span></div>
-      <div class="wf-item"><div class="check">✓</div><span>Instant customer assistance by voice, text, or chat</span></div>
-      <div class="wf-item"><div class="check">✓</div><span>Lead nurturing &amp; automated follow-ups</span></div>
-      <div class="wf-item"><div class="check">✓</div><span>Consistent service quality, every call</span></div>
-      <div class="wf-item"><div class="check">✓</div><span>Built toward top-3 Map Pack rankings</span></div>
-    </div>
-
-    <div class="flow-steps">
-      <div class="flow-step">
-        <div class="flow-num">01</div>
-        <h4>Customer calls or texts</h4>
-        <p>Your AI agent answers instantly, understanding the request through natural conversation.</p>
-      </div>
-      <div class="flow-step">
-        <div class="flow-num">02</div>
-        <h4>Intelligent routing</h4>
-        <p>Emergencies escalate to you, quotes get booked, and FAQs get answered — automatically.</p>
-      </div>
-      <div class="flow-step">
-        <div class="flow-num">03</div>
-        <h4>Seamless integration</h4>
-        <p>Every interaction syncs to your CRM, calendar, and reporting — no manual entry.</p>
-      </div>
-      <div class="flow-step">
-        <div class="flow-num">04</div>
-        <h4>Continuous improvement</h4>
-        <p>We review call logs monthly and refine scripts based on real conversations.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="compare reveal">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-eyebrow">The comparison</span>
-      <h2>AIWorx vs. traditional hiring</h2>
-    </div>
-    <div class="compare-table">
-      <div class="compare-row head">
-        <div class="c1"></div><div class="c2">AIWorx AI Agent</div><div class="c3">Traditional Hiring</div>
-      </div>
-      <div class="compare-row"><div class="c1">Hours covered</div><div class="c2"><svg class="yes" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> 24/7, never off duty</div><div class="c3"><svg class="no" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg> Business hours only</div></div>
-      <div class="compare-row"><div class="c1">Response time</div><div class="c2"><svg class="yes" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Instant, no hold time</div><div class="c3"><svg class="no" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg> Customers wait on hold</div></div>
-      <div class="compare-row"><div class="c1">Cost</div><div class="c2"><svg class="yes" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Low, fixed monthly cost</div><div class="c3"><svg class="no" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg> Salary + benefits + training</div></div>
-      <div class="compare-row"><div class="c1">Capacity</div><div class="c2"><svg class="yes" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Handles unlimited calls at once</div><div class="c3"><svg class="no" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg> Limited by headcount</div></div>
-      <div class="compare-row"><div class="c1">Consistency</div><div class="c2"><svg class="yes" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> Same script, same tone, every time</div><div class="c3"><svg class="no" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg> Varies by employee &amp; mood</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="process reveal" id="process">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-eyebrow">How it works</span>
-      <h2>Three steps to your first automated week</h2>
-    </div>
-    <div class="process-steps">
-      <div class="process-step">
-        <div class="n">01</div>
-        <h3>Book a free consult</h3>
-        <p>We look at your calls, reviews, and workflows to find where AI saves the most time.</p>
-      </div>
-      <div class="process-step">
-        <div class="n">02</div>
-        <h3>Get a custom AI plan</h3>
-        <p>We build and test your voice agent, text-back flow, or workflow before it ever touches a real customer.</p>
-      </div>
-      <div class="process-step">
-        <div class="n">03</div>
-        <h3>Watch your business scale</h3>
-        <p>Go live, review the results monthly, and keep growing without adding headcount.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="stats reveal" id="results">
-  <div class="wrap stats-grid">
-    <div class="stat"><div class="num">2x</div><div class="lbl">more reviews in 30 days</div></div>
-    <div class="stat"><div class="num">80%</div><div class="lbl">less manual admin</div></div>
-    <div class="stat"><div class="num">10+</div><div class="lbl">hours saved per week</div></div>
-    <div class="stat"><div class="num">Top 3</div><div class="lbl">Map Pack rankings</div></div>
-  </div>
-</section>
-
-<section class="testimonials reveal" id="testimonials">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-eyebrow">From business owners like you</span>
-      <h2>Results, not buzzwords</h2>
-    </div>
-    <div class="test-track">
-      <div class="test-card active">
-        <div class="stars">★★★★★</div>
-        <p class="quote">We used to lose 4-5 calls a week to voicemail. Now every one gets answered and half of them turn into booked jobs the same day.</p>
-        <div class="who">— Local HVAC Company Owner, Ankeny IA</div>
-      </div>
-      <div class="test-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">Our Google reviews doubled in a month without me lifting a finger. We finally show up in the Map Pack for our top service areas.</p>
-        <div class="who">— Plumbing Company Owner, West Des Moines</div>
-      </div>
-      <div class="test-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">I got 10 hours a week back. That's a full day I now spend on estimates instead of chasing missed calls and messages.</p>
-        <div class="who">— Home Services Owner, Waukee IA</div>
-      </div>
-    </div>
-    <div class="test-dots">
-      <button class="active" data-i="0"></button>
-      <button data-i="1"></button>
-      <button data-i="2"></button>
-    </div>
-  </div>
-</section>
-
-<section class="faq reveal" id="faq">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="sec-eyebrow">Questions you may have</span>
-      <h2>Frequently asked questions</h2>
-    </div>
-    <div class="faq-list">
-      <div class="faq-item open">
-        <button class="faq-q">What exactly does AIWorx set up for my business?<span class="plus"></span></button>
-        <div class="faq-a"><p>Depending on your needs, we set up an AI voice agent, SMS text-back automation, review management, or custom workflows — each connected to your existing phone number, CRM, and calendar.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q">How fast will I see results?<span class="plus"></span></button>
-        <div class="faq-a"><p>Most clients are live within a week of their consult, and start seeing fewer missed calls and faster review responses within the first 30 days.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q">How does onboarding work?<span class="plus"></span></button>
-        <div class="faq-a"><p>We start with a free consult to map your call flow and goals, build and test your custom AI plan, then go live — with you reviewing every step before launch.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q">What if I still want a real person involved?<span class="plus"></span></button>
-        <div class="faq-a"><p>That's the default. Your AI agent handles routine questions and booking, then hands off emergencies or complex requests straight to you or your team.</p></div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q">What support do you provide after setup?<span class="plus"></span></button>
-        <div class="faq-a"><p>We review call logs monthly, adjust scripts based on real conversations, and are available for changes or troubleshooting any time.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="final-cta reveal" id="book">
-  <div class="wrap">
-    <h2>Ready to stop losing calls to voicemail?</h2>
-    <p>Book a free consultation and get a custom AI automation plan for your business — no obligation.</p>
-    <a href="#" class="btn btn-primary">Schedule Free Consultation</a>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div class="logo"><div class="logo-mark"><span>AI</span></div>AIWorx</div>
-        <p>AI automation for service-based businesses across Greater Des Moines, IA — voice agents, text-back systems, and reputation management built to help you scale.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Contact</h4>
-        <a href="mailto:hello@aiworx.agency">hello@aiworx.agency</a>
-        <a href="tel:5155550142">(515) 555-0142</a>
-        <p>Des Moines, IA</p>
-      </div>
-      <div class="footer-col">
-        <h4>Service area</h4>
-        <p>Des Moines · West Des Moines</p>
-        <p>Ankeny · Urbandale · Waukee</p>
-        <p>Johnston · Clive &amp; surrounding areas</p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 AIWorx. All rights reserved.</span>
-      <div class="socials">
-        <a href="#" aria-label="Facebook"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7H7.9V12h2.6V9.8c0-2.6 1.5-4 3.9-4 1.1 0 2.3.2 2.3.2v2.5h-1.3c-1.3 0-1.7.8-1.7 1.6V12h2.9l-.5 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
-        <a href="#" aria-label="Instagram"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
-        <a href="#" aria-label="LinkedIn"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM3.5 8.5h3.9V21H3.5zM10 8.5h3.7v1.7h.05c.5-.95 1.8-1.95 3.7-1.95 4 0 4.7 2.6 4.7 6V21h-3.9v-5.6c0-1.35-.02-3.1-1.9-3.1-1.9 0-2.2 1.5-2.2 3v5.7H10z"/></svg></a>
-      </div>
-    </div>
-  </div>
-</footer>
-
-<script>
-  // Scroll reveal
-  const revealEls = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, {threshold:0.12});
-  revealEls.forEach(el=>io.observe(el));
-
-  // Call log ticker
-  const calls = [
-    {t:"2:14 AM", desc:"Emergency HVAC — no heat", sub:"Ankeny, IA"},
-    {t:"7:32 AM", desc:"Reschedule appointment", sub:"West Des Moines"},
-    {t:"11:05 AM", desc:"Quote request — bathroom remodel", sub:"Waukee, IA"},
-    {t:"1:48 PM", desc:"After-hours plumbing inquiry", sub:"Urbandale"},
-    {t:"6:57 PM", desc:"New customer — booking confirmed", sub:"Johnston, IA"},
-  ];
-  const callBody = document.getElementById('callBody');
-  const counterEl = document.getElementById('answeredCount');
-  let count = 0, target = 1842;
-
-  function renderCalls(){
-    callBody.innerHTML = '';
-    calls.forEach((c,i)=>{
-      const row = document.createElement('div');
-      row.className='call-row';
-      row.style.animationDelay = (i*0.18)+'s';
-      row.innerHTML = `<div class="t">${c.t}</div><div><div class="desc">${c.desc}</div><div class="sub">${c.sub}</div></div><div class="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>Answered</div>`;
-      callBody.appendChild(row);
-    });
-  }
-  renderCalls();
-
-  function animateCounter(){
-    const step = Math.ceil(target/60);
-    const t = setInterval(()=>{
-      count += step;
-      if(count >= target){count = target; clearInterval(t);}
-      counterEl.textContent = count.toLocaleString();
-    }, 25);
-  }
-  const counterIO = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting){ animateCounter(); counterIO.disconnect(); } });
-  }, {threshold:0.4});
-  counterIO.observe(document.querySelector('.calllog'));
-
-  // fake live clock (rotates through a few after-hours times to sell "24/7")
-  const clockEl = document.getElementById('clock');
-  const times = ["2:47 AM","11:12 PM","6:03 AM","9:41 PM","3:28 AM"];
-  let ti = 0;
-  setInterval(()=>{ ti = (ti+1)%times.length; clockEl.textContent = times[ti]; }, 3000);
-
-  // FAQ accordion
-  document.querySelectorAll('.faq-item').forEach(item=>{
-    const q = item.querySelector('.faq-q');
-    const a = item.querySelector('.faq-a');
-    if(item.classList.contains('open')){ a.style.maxHeight = a.scrollHeight+'px'; }
-    q.addEventListener('click', ()=>{
-      const isOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item').forEach(i=>{
-        i.classList.remove('open');
-        i.querySelector('.faq-a').style.maxHeight = null;
-      });
-      if(!isOpen){
-        item.classList.add('open');
-        a.style.maxHeight = a.scrollHeight+'px';
-      }
-    });
-  });
-
-  // Testimonial carousel
-  const cards = document.querySelectorAll('.test-card');
-  const dots = document.querySelectorAll('.test-dots button');
-  let active = 0;
-  function showTest(i){
-    cards.forEach((c,idx)=>c.classList.toggle('active', idx===i));
-    dots.forEach((d,idx)=>d.classList.toggle('active', idx===i));
-    active = i;
-  }
-  dots.forEach(d=>d.addEventListener('click', ()=>showTest(parseInt(d.dataset.i))));
-  setInterval(()=>{ showTest((active+1)%cards.length); }, 5500);
-</script>
-
+<body class="antialiased">
+   <!-- Header/Navigation -->
+   <header class="bg-black shadow-sm py-4 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center sticky top-0 z-50 rounded-b-xl">
+       <!-- Logo Image -->
+       <div class="mb-4 md:mb-0">
+           <img src="https://content-fetcher.web.app/api/file/uploaded:20250415_170924_0000 (1).jpg-7329c152-3a38-48d8-84f1-a24fa6387675" alt="AIWorx Logo" class="h-10 md:h-12 w-auto">
+       </div>
+       <nav class="w-full md:w-auto">
+           <ul class="flex flex-wrap justify-center md:space-x-8 space-x-4">
+               <li><a href="#hero" class="text-white hover:text-teal-400 font-medium transition duration-300">Home</a></li>
+               <li><a href="#problems" class="text-white hover:text-teal-400 font-medium transition duration-300">Challenges</a></li>
+               <li><a href="#what-ai-can-do" class="text-white hover:text-teal-400 font-medium transition duration-300">What AI Can Do</a></li>
+               <li><a href="#solutions" class="text-white hover:text-teal-400 font-medium transition duration-300">Solutions</a></li>
+               <li><a href="#process" class="text-white hover:text-teal-400 font-medium transition duration-300">Process</a></li>
+               <li><a href="#case-studies" class="text-white hover:text-teal-400 font-medium transition duration-300">Case Studies</a></li>
+               <li><a href="#testimonials" class="text-white hover:text-teal-400 font-medium transition duration-300">Testimonials</a></li>
+               <li><a href="#benefits" class="text-white hover:text-teal-400 font-medium transition duration-300">Benefits</a></li>
+               <li><a href="#pricing" class="text-white hover:text-teal-400 font-medium transition duration-300">Pricing</a></li>
+               <li><a href="#contact" class="text-white hover:text-teal-400 font-medium transition duration-300">Contact</a></li>
+           </ul>
+       </nav>
+       <a href="#contact" class="gradient-button text-white font-semibold py-2 px-6 rounded-full shadow-lg mt-4 md:mt-0">
+           Book a Free Consultation
+       </a>
+   </header>
+   <!-- Hero Section -->
+   <section id="hero" class="gradient-bg text-white py-20 md:py-32 flex items-center justify-center text-center rounded-xl m-4 shadow-xl">
+       <div class="container mx-auto px-6 max-w-4xl">
+           <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+               Scale Your Service Business Smarter with <span class="block mt-2">AI Automation</span>
+           </h1>
+           <p class="text-lg md:text-xl mb-10 opacity-90">
+               AIWorx helps your service business save big on labor and materials, provide 24/7 customer service, and get more qualified leads. Our AI sales agents close more deals, while AI customer service agents answer more questions and filter out all those annoying spam and scam calls, letting you focus on growth.
+           </p>
+           <a href="#problems" class="bg-white text-purple-700 hover:bg-purple-100 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 inline-block">
+               See How AI Can Transform Your Business
+           </a>
+       </div>
+   </section>
+   <!-- Introduction/Problem Statement -->
+   <section class="py-16 md:py-24 bg-white m-4 rounded-xl shadow-lg">
+       <div class="container mx-auto px-6 text-center max-w-3xl">
+           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8">Are You a Busy Boss Facing These Challenges?</h2>
+           <p class="text-lg text-gray-700 leading-relaxed">
+               Running a service-based business is demanding. You're constantly juggling customer service, managing online reputation, ensuring your website converts, and keeping your marketing strategy fresh. If these sound familiar, AI tools are your game-changer.
+           </p>
+       </div>
+   </section>
+   <div class="section-separator"></div>
+   <!-- AI Automation Checklist for Busy Bosses -->
+   <section id="problems" class="py-16 md:py-24 bg-gray-50 m-4 rounded-xl shadow-lg">
+       <div class="container mx-auto px-6">
+           <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">The AI Automation Checklist for Busy Bosses</h2>
+           <!-- Problem 1: Customer Service -->
+           <div class="mb-16">
+               <h3 class="text-2xl md:text-3xl font-bold gradient-text mb-6 flex items-center">
+                   <span class="text-4xl mr-4">📞</span> Spending Too Much Time on Customer Service?
+               </h3>
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                   <div>
+                       <p class="text-lg text-gray-700 mb-4">
+                           <strong>Problem:</strong> Customer service can be time-consuming and resource-intensive, diverting focus from core business activities. Long response times and the inability to provide 24/7 support can lead to customer dissatisfaction.
+                       </p>
+                       <p class="text-lg text-gray-700 mb-4">
+                           <strong>AI Solution:</strong> AI-powered customer service tools automate routine tasks, provide instant support, and significantly improve efficiency.
+                       </p>
+                       <h4 class="text-xl font-semibold text-gray-800 mb-3">Key AI Tools:</h4>
+                       <ul class="list-disc list-inside text-gray-700 space-y-2">
+                           <li><strong>AI Chatbots:</strong> Handle FAQs instantly on websites and messaging platforms, freeing up human agents.</li>
+                           <li><strong>AI Email Assistants:</strong> Sort, prioritize, draft responses, and summarize email threads, reducing response times.</li>
+                           <li><strong>AI Voice Assistants:</strong> Provide hands-free help, enabling customers to interact with services using voice commands.</li>
+                       </ul>
+                   </div>
+                   <div class="bg-white p-8 rounded-xl shadow-md">
+                       <h4 class="text-xl font-semibold text-gray-800 mb-4">Benefits:</h4>
+                       <ul class="list-disc list-inside text-gray-700 space-y-2">
+                           <li>Reduced Customer Response Times: Instant answers and support.</li>
+                           <li>24/7 Availability: Round-the-clock support without increasing staffing costs.</li>
+                           <li>Increased Agent Efficiency: Human agents focus on complex, high-value tasks.</li>
+                       </ul>
+                   </div>
+               </div>
+           </div>
+           <div class="section-separator"></div>
+           <!-- Problem 2: Online Reviews -->
+           <div class="mb-16">
+               <h3 class="text-2xl md:text-3xl font-bold gradient-text mb-6 flex items-center">
+                   <span class="text-4xl mr-4">⭐</span> Trouble Keeping Up With Online Reviews?
+               </h3>
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                   <div>
+                       <p class="text-lg text-gray-700 mb-4">
+                           <strong>Problem:</strong> Monitoring and responding to online reviews across various platforms is time-consuming. Unaddressed negative reviews can significantly damage your online reputation.
+                       </p>
+                       <p class="text-lg text-gray-700 mb-4">
+                           <strong>AI Solution:</strong> AI-powered review management tools automate review collection, analysis, and response processes, ensuring a strong online presence.
+                       </p>
+                       <h4 class="text-xl font-semibold text-gray-800 mb-3">Key AI Tools:</h4>
+                       <ul class="list-disc list-inside text-gray-700 space-y-2">
+                           <li><strong>AI Review Response Automation:</strong> Generate suggested responses to online reviews, ensuring consistent brand voice.</li>
+                           <li><strong>AI Sentiment Analysis:</strong> Analyze customer sentiment from reviews to understand opinions and identify recurring issues.</li>
+                           <li><strong>Review Monitoring Platforms:</strong> Collect and manage reviews from multiple platforms in a single dashboard.</li>
+                       </ul>
+                   </div>
+                   <div class="bg-white p-8 rounded-xl shadow-md">
+                       <h4 class="text-xl font-semibold text-gray-800 mb-4">Benefits:</h4>
+                       <ul class="list-disc list-inside text-gray-700 space-y-2">
+                           <li>Improved Online Reputation: Prompt and consistent responses to feedback.</li>
+                           <li>Faster Response Times: Quickly address negative feedback and resolve issues.</li>
+                           <li>Better Customer Insights: Understand sentiment and identify areas for improvement.</li>
+                       </ul>
+                   </div>
+               </div>
+           </div>
+           <div class="section-separator"></div>
+           <!-- Problem 3: Website Driving New Customers -->
+           <div class="mb-16">
+               <h3 class="text-2xl md:text-3xl font-bold gradient-text mb-6 flex items-center">
+                   <span class="text-4xl mr-4">🌐</span> Is Your Website Driving New Customers?
+               </h3>
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                   <div>
+                       <p class="text-lg text-gray-700 mb-4">
+                           <strong>Problem:</strong> Websites may not be effectively attracting or converting visitors into customers. Creating engaging content and optimizing for search engines can be a significant challenge.
+                       </p>
+                       <p class="text-lg text-gray-700 mb-4">
+                           <strong>AI Solution:</strong> AI tools can significantly enhance website content, improve SEO, and engage visitors to drive customer acquisition.
+                       </p>
+                       <h4 class="text-xl font-semibold text-gray-800 mb-3">Key AI Tools:</h4>
+                       <ul class="list-disc list-inside text-gray-700 space-y-2">
+                           <li><strong>AI-Powered Content Generation:</strong> Generate blog posts, website copy, and marketing materials to attract visitors.</li>
+                           <li><strong>AI Chatbots for Lead Generation:</strong> Engage visitors in real-time, qualify leads, and schedule meetings.</li>
+                           <li><strong>AI SEO Optimization:</strong> Optimize website content for search engines, identify keywords, and improve ranking.</li>
+                       </ul>
+                   </div>
+                   <div class="bg-white p-8 rounded-xl shadow-md">
+                       <h4 class="text-xl font-semibold text-gray-800 mb-4">Benefits:</h4>
+                       <ul class="list-disc list-inside text-gray-700 space-y-2">
+                           <li>Increased Website Traffic: Attract more visitors through SEO and engaging content.</li>
+                           <li>Improved Lead Generation: Convert visitors into leads via AI chatbots and personalized experiences.</li>
+                           <li>Enhanced Customer Engagement: Provide valuable content and real-time interaction.</li>
+                       </ul>
+                   </div>
+               </div>
+           </div>
+           <div class="section-separator"></div>
+           <!-- Problem 4: Marketing Strategy -->
+           <div>
+               <h3 class="text-2xl md:text-3xl font-bold gradient-text mb-6 flex items-center">
+                   <span class="text-4xl mr-4">📈</span> Is Your Marketing Strategy Up-to-Date?
+               </h3>
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                   <div>
+                       <p class="text-lg text-gray-700 mb-4">
+                           <strong>Problem:</strong> Developing and executing effective marketing strategies is complex and data-intensive. Keeping up with trends and personalizing marketing efforts is crucial for success.
+                       </p>
+                       <p class="text-lg text-gray-700 mb-4">
+                           <strong>AI Solution:</strong> AI-powered marketing tools analyze data, automate campaigns, and personalize customer experiences to optimize your marketing ROI.
+                       </p>
+                       <h4 class="text-xl font-semibold text-gray-800 mb-3">Key AI Tools:</h4>
+                       <ul class="list-disc list-inside text-gray-700 space-y-2">
+                           <li><strong>AI Marketing Analytics:</strong> Analyze data across channels, optimize campaign performance, and predict customer behavior.</li>
+                           <li><strong>AI Content Creation & Optimization:</strong> Generate marketing copy for ads, emails, and social media, ensuring brand consistency.</li>
+                           <li><strong>AI Social Media Management:</strong> Automate posting, schedule content, analyze engagement, and optimize social media strategy.</li>
+                       </ul>
+                   </div>
+                   <div class="bg-white p-8 rounded-xl shadow-md">
+                       <h4 class="text-xl font-semibold text-gray-800 mb-4">Benefits:</h4>
+                       <ul class="list-disc list-inside text-gray-700 space-y-2">
+                           <li>Improved Marketing ROI: Optimize ad spend and make data-driven decisions.</li>
+                           <li>Personalized Customer Experiences: Deliver tailored content and offers.</li>
+                           <li>Efficient Campaign Management: Automate tasks and streamline workflows.</li>
+                       </ul>
+                   </div>
+               </div>
+           </div>
+           <!-- CTA Button at the end of the problems section -->
+           <div class="text-center mt-16">
+               <a href="#contact" class="gradient-button text-white font-semibold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 inline-block">
+                   FREE AI Strategy & Automation Consultation
+               </a>
+           </div>
+       </div>
+   </section>
+   <div class="section-separator"></div>
+   <!-- What AI Can Do In Your Business Section -->
+   <section id="what-ai-can-do" class="py-16 md:py-24 bg-white m-4 rounded-xl shadow-lg">
+       <div class="container mx-auto px-6 text-center">
+           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-12">What AI Can Do In Your Business</h2>
+           <p class="text-lg text-gray-700 max-w-3xl mx-auto mb-12">
+               AI offers transformative potential across various service-based industries. Discover how intelligent automation can specifically benefit your business.
+           </p>
+           <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+               <!-- Electricians -->
+               <div class="bg-gray-50 p-8 rounded-xl shadow-md text-left">
+                   <h3 class="text-2xl font-bold gradient-text mb-6 flex items-center"><span class="text-4xl mr-4">⚡</span> Electricians</h3>
+                   <ul class="space-y-6">
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Automated Job Scheduling & Dispatch</h4>
+                           <p class="text-gray-600">AI can optimize technician routes, schedule appointments based on availability and urgency, and automatically dispatch the closest qualified electrician.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Reduced travel time, increased job capacity, improved customer satisfaction with faster service.</li>
+                           </ul>
+                       </li>
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">AI-Powered Diagnostic Assistance</h4>
+                           <p class="text-gray-600">AI tools can analyze fault codes, historical data, and circuit diagrams to help electricians quickly diagnose complex electrical issues, even remotely.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Faster troubleshooting, increased first-time fix rates, reduced on-site time.</li>
+                           </ul>
+                       </li>
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Predictive Maintenance for Electrical Systems</h4>
+                           <p class="text-gray-600">AI can monitor electrical system performance, predict potential failures before they occur, and alert technicians for proactive maintenance.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Prevents costly breakdowns, extends equipment lifespan, enhances safety.</li>
+                           </ul>
+                       </li>
+                   </ul>
+               </div>
+               <!-- Plumbers -->
+               <div class="bg-gray-50 p-8 rounded-xl shadow-md text-left">
+                   <h3 class="text-2xl font-bold gradient-text mb-6 flex items-center"><span class="text-4xl mr-4">💧</span> Plumbers</h3>
+                   <ul class="space-y-6">
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Smart Leak Detection & Prevention</h4>
+                           <p class="text-gray-600">AI-powered sensors can detect unusual water flow or pressure changes, alerting plumbers and homeowners to potential leaks before they cause major damage.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Early detection, minimized water damage, reduced insurance claims.</li>
+                           </ul>
+                       </li>
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Automated Inventory Management for Parts</h4>
+                           <p class="text-gray-600">AI systems can track inventory levels of common plumbing parts, predict demand, and automate reordering, ensuring technicians always have what they need.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Reduced stockouts, optimized inventory costs, faster job completion.</li>
+                           </ul>
+                       </li>
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Customer Service Chatbots for FAQs</h4>
+                           <p class="text-gray-600">Implement chatbots on your website to answer common plumbing questions (e.g., "how to unclog a drain," "emergency services"), qualify leads, and schedule appointments.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** 24/7 customer support, reduced call volume, improved lead capture.</li>
+                           </ul>
+                       </li>
+                   </ul>
+               </div>
+               <!-- General Contractors -->
+               <div class="bg-gray-50 p-8 rounded-xl shadow-md text-left">
+                   <h3 class="text-2xl font-bold gradient-text mb-6 flex items-center"><span class="text-4xl mr-4">🏗️</span> General Contractors</h3>
+                   <ul class="space-y-6">
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">AI-Powered Project Management & Scheduling</h4>
+                           <p class="text-gray-600">AI can analyze project scope, resource availability, and historical data to create optimized project timelines, identify potential delays, and suggest adjustments.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** On-time project completion, efficient resource allocation, reduced cost overruns.</li>
+                           </ul>
+                       </li>
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Automated Bid & Proposal Generation</h4>
+                           <p class="text-gray-600">AI tools can rapidly generate accurate bids and detailed proposals by analyzing project specifications, material costs, and labor estimates from past projects.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Faster turnaround on bids, increased competitiveness, reduced manual errors.</li>
+                           </ul>
+                       </li>
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Site Monitoring & Progress Tracking</h4>
+                           <p class="text-gray-600">Utilize AI with drones or cameras to monitor construction progress, identify safety hazards, and track material usage in real-time.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Enhanced safety, accurate progress reporting, early detection of issues.</li>
+                           </ul>
+                       </li>
+                   </ul>
+               </div>
+               <!-- HVAC -->
+               <div class="bg-gray-50 p-8 rounded-xl shadow-md text-left">
+                   <h3 class="text-2xl font-bold gradient-text mb-6 flex items-center"><span class="text-4xl mr-4">❄️🔥</span> HVAC</h3>
+                   <ul class="space-y-6">
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Predictive Maintenance for HVAC Systems</h4>
+                           <p class="text-gray-600">AI analyzes sensor data from HVAC units to predict potential component failures, allowing for proactive maintenance before system breakdowns.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Reduced emergency calls, extended equipment life, improved energy efficiency for clients.</li>
+                           </ul>
+                       </li>
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Optimized Technician Routing & Scheduling</h4>
+                           <p class="text-gray-600">AI algorithms can plan the most efficient routes for HVAC technicians, considering traffic, job priority, and technician skill sets.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Increased service calls per day, lower fuel costs, faster response times.</li>
+                           </ul>
+                       </li>
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">AI-Assisted Remote Diagnostics</h4>
+                           <p class="text-gray-600">Technicians can use AI tools to remotely diagnose HVAC issues through connected systems, guiding them to solutions before arriving on-site.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Reduced diagnostic time, fewer truck rolls, improved customer experience.</li>
+                           </ul>
+                       </li>
+                   </ul>
+               </div>
+               <!-- Roofers and Siders -->
+               <div class="bg-gray-50 p-8 rounded-xl shadow-md text-left">
+                   <h3 class="text-2xl font-bold gradient-text mb-6 flex items-center"><span class="text-4xl mr-4">🏠</span> Roofers and Siders</h3>
+                   <ul class="space-y-6">
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Drone-Based AI Inspections</h4>
+                           <p class="text-gray-600">AI-powered drones can perform rapid, detailed roof and siding inspections, identifying damage, wear, and potential issues with high accuracy.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Enhanced safety, faster inspection times, accurate damage assessment, improved quoting.</li>
+                           </ul>
+                       </li>
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Automated Material Estimation & Ordering</h4>
+                           <p class="text-gray-600">AI can calculate precise material quantities needed for roofing and siding projects based on drone measurements or blueprints, and automate ordering.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Reduced material waste, accurate budgeting, streamlined procurement.</li>
+                           </ul>
+                       </li>
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">AI-Enhanced Customer Proposals</h4>
+                           <p class="text-gray-600">Generate professional, personalized proposals that include AI-analyzed imagery of the property, detailed material breakdowns, and visual simulations of new roofing/siding options.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Higher conversion rates, improved client understanding, professional brand image.</li>
+                           </ul>
+                       </li>
+                   </ul>
+               </div>
+               <!-- Drywallers -->
+               <div class="bg-gray-50 p-8 rounded-xl shadow-md text-left">
+                   <h3 class="text-2xl font-bold gradient-text mb-6 flex items-center"><span class="text-4xl mr-4">🧱</span> Drywallers</h3>
+                   <ul class="space-y-6">
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Automated Material Calculation & Waste Reduction</h4>
+                           <p class="text-gray-600">AI can analyze room dimensions and layouts to calculate the precise number of drywall sheets needed, minimizing waste and optimizing cuts.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Significant cost savings on materials, reduced environmental impact, faster project setup.</li>
+                           </ul>
+                       </li>
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Project Progress Monitoring via Image Recognition</h4>
+                           <p class="text-gray-600">AI can analyze photos of job sites to track drywall installation progress, identify areas needing attention, and ensure quality control.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Real-time progress updates, consistent quality, early detection of potential issues.</li>
+                           </ul>
+                       </li>
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Optimized Team Scheduling & Task Assignment</h4>
+                           <p class="text-gray-600">AI can schedule drywall teams based on project deadlines, team availability, and skill sets, ensuring efficient deployment and workload balancing.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Improved project timelines, reduced labor costs, increased team productivity.</li>
+                           </ul>
+                       </li>
+                   </ul>
+               </div>
+               <!-- Painters -->
+               <div class="bg-gray-50 p-8 rounded-xl shadow-md text-left">
+                   <h3 class="text-2xl font-bold gradient-text mb-6 flex items-center"><span class="text-4xl mr-4">🎨</span> Painters</h3>
+                   <ul class="space-y-6">
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">AI-Powered Color Consultation & Visualization</h4>
+                           <p class="text-gray-600">AI apps can analyze room lighting and existing decor to suggest optimal paint colors, and allow clients to visualize how different colors will look on their walls.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Enhanced customer experience, faster decision-making, reduced color-related rework.</li>
+                           </ul>
+                       </li>
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Automated Paint Quantity Estimation</h4>
+                           <p class="text-gray-600">AI can accurately calculate the amount of paint needed based on room dimensions, surface type, and number of coats, minimizing over-ordering or shortages.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Reduced material costs, less waste, efficient project planning.</li>
+                           </ul>
+                       </li>
+                       <li>
+                           <h4 class="text-xl font-semibold text-gray-800 mb-2">Lead Qualification & Appointment Scheduling</h4>
+                           <p class="text-gray-600">AI chatbots can engage website visitors, ask qualifying questions about their painting needs, and automatically book consultation appointments for your sales team.</p>
+                           <ul class="list-disc list-inside text-gray-700 text-sm mt-2">
+                               <li>**Benefit:** Streamlined lead funnel, 24/7 availability for potential clients, increased booked appointments.</li>
+                           </ul>
+                       </li>
+                   </ul>
+               </div>
+           </div>
+       </div>
+   </section>
+   <div class="section-separator"></div>
+   <!-- How AIWorx Transforms Your Business (Core Capabilities) -->
+   <section id="solutions" class="py-16 md:py-24 bg-white m-4 rounded-xl shadow-lg">
+       <div class="container mx-auto px-6 text-center">
+           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-12">How AIWorx Transforms Your Business</h2>
+           <p class="text-lg text-gray-700 max-w-3xl mx-auto mb-12">
+               We integrate AI agents strategically across various business functions to create a cohesive, scalable ecosystem that supports sustainable growth. Here's how our AI-driven solutions work:
+           </p>
+           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+               <div class="bg-gray-50 p-6 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">📊</div>
+                   <h3 class="text-xl font-semibold mb-3">Data Analysis & Lead Identification</h3>
+                   <p class="text-gray-600">Processes vast amounts of information to identify high-potential leads, analyzing social media, public records, and more.</p>
+               </div>
+               <div class="bg-gray-50 p-6 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">✍️</div>
+                   <h3 class="text-xl font-semibold mb-3">Personalized Outreach</h3>
+                   <p class="text-gray-600">Crafts customized strategies for each lead, emphasizing relevant aspects of your services based on specific needs.</p>
+               </div>
+               <div class="bg-gray-50 p-6 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">⏰</div>
+                   <h3 class="text-xl font-semibold mb-3">Timing & Channel Optimization</h3>
+                   <p class="text-gray-600">Determines the best time and method to reach out, triggering responses through the most effective medium.</p>
+               </div>
+               <div class="bg-gray-50 p-6 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">🧠</div>
+                   <h3 class="text-xl font-semibold mb-3">Continuous Learning</h3>
+                   <p class="text-gray-600">Constantly refines its understanding of qualified leads, adjusting algorithms based on conversion success.</p>
+               </div>
+               <div class="bg-gray-50 p-6 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">⚡</div>
+                   <h3 class="text-xl font-semibold mb-3">24/7 Availability & Support</h3>
+                   <p class="text-gray-600">Engages with potential clients at any time, answering questions and scheduling appointments outside business hours.</p>
+               </div>
+               <div class="bg-gray-50 p-6 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">✅</div>
+                   <h3 class="text-xl font-semibold mb-3">Lead Qualification & Scoring</h3>
+                   <p class="text-gray-600">Asks qualifying questions and scores leads, ensuring human agents focus on the most promising opportunities.</p>
+               </div>
+               <div class="bg-gray-50 p-6 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">💬</div>
+                   <h3 class="text-xl font-semibold mb-3">Multi-Channel Communication</h3>
+                   <p class="text-gray-600">Communicates through various channels including voice, email, chat, or SMS, providing engagement flexibility.</p>
+               </div>
+               <div class="bg-gray-50 p-6 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">🔗</div>
+                   <h3 class="text-xl font-semibold mb-3">Seamless Integration</h3>
+                   <p class="text-gray-600">Integrates with CRM systems, email platforms, and other essential tools to streamline workflows.</p>
+               </div>
+               <div class="bg-gray-50 p-6 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">🔮</div>
+                   <h3 class="text-xl font-semibold mb-3">Predictive Analytics</h3>
+                   <p class="text-gray-600">Analyzes market trends and customer behavior to predict which leads are most likely to convert.</p>
+               </div>
+               <div class="bg-gray-50 p-6 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">🔄</div>
+                   <h3 class="text-xl font-semibold mb-3">Automated Follow-ups</h3>
+                   <p class="text-gray-600">Handles lead nurturing through automated, personalized follow-ups, keeping clients engaged.</p>
+               </div>
+           </div>
+       </div>
+   </section>
+   <div class="section-separator"></div>
+   <!-- Process Section -->
+   <section id="process" class="py-16 md:py-24 bg-gray-100 m-4 rounded-xl shadow-lg">
+       <div class="container mx-auto px-6 text-center">
+           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-12">Our AI Automation Process</h2>
+           <p class="text-lg text-gray-700 max-w-3xl mx-auto mb-12">
+               We follow a streamlined approach to integrate AI solutions seamlessly into your business operations, ensuring maximum impact and efficiency.
+           </p>
+           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+               <!-- Step 1 -->
+               <div class="bg-white p-8 rounded-xl shadow-md transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">1️⃣</div>
+                   <h3 class="text-xl font-semibold mb-3">Discovery & Strategy</h3>
+                   <p class="text-gray-600">We begin by understanding your unique business challenges and goals to identify the best AI opportunities.</p>
+               </div>
+               <!-- Step 2 -->
+               <div class="bg-white p-8 rounded-xl shadow-md transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">2️⃣</div>
+                   <h3 class="text-xl font-semibold mb-3">Solution Design & Development</h3>
+                   <p class="text-gray-600">Our experts design and develop custom AI agents tailored to your specific operational needs.</p>
+               </div>
+               <!-- Step 3 -->
+               <div class="bg-white p-8 rounded-xl shadow-md transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">3️⃣</div>
+                   <h3 class="text-xl font-semibold mb-3">Integration & Optimization</h3>
+                   <p class="text-gray-600">We seamlessly integrate AI into your existing systems and continuously optimize for peak performance.</p>
+               </div>
+           </div>
+       </div>
+   </section>
+   <div class="section-separator"></div>
+   <!-- Case Studies Section -->
+   <section id="case-studies" class="py-16 md:py-24 bg-gray-50 m-4 rounded-xl shadow-lg">
+       <div class="container mx-auto px-6 text-center">
+           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-12">Our Success Stories (Case Studies)</h2>
+           <p class="text-lg text-gray-700 max-w-3xl mx-auto mb-12">
+               See how AIWorx has helped businesses like yours achieve remarkable results through intelligent automation.
+           </p>
+           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+               <!-- Case Study 1 Placeholder -->
+               <div class="bg-white p-8 rounded-xl shadow-md transform hover:scale-105 transition duration-300">
+                   <h3 class="text-2xl font-semibold gradient-text mb-4">Client A: Boosting Lead Qualification by 40%</h3>
+                   <p class="text-gray-600 mb-4">
+                       A service-based business struggled with qualifying inbound leads efficiently. AIWorx implemented an AI-driven lead scoring and qualification system, resulting in a significant increase in sales-ready leads.
+                   </p>
+                   <a href="#" class="text-purple-600 hover:text-teal-500 font-semibold">Read More &rarr;</a>
+               </div>
+               <!-- Case Study 2 Placeholder -->
+               <div class="bg-white p-8 rounded-xl shadow-md transform hover:scale-105 transition duration-300">
+                   <h3 class="text-2xl font-semibold gradient-text mb-4">Client B: Reducing Customer Service Costs by 30%</h3>
+                   <p class="text-gray-600 mb-4">
+                       Facing high customer support volumes, this client partnered with AIWorx to deploy AI chatbots and email assistants, automating routine inquiries and drastically cutting operational costs.
+                   </p>
+                   <a href="#" class="text-purple-600 hover:text-teal-500 font-semibold">Read More &rarr;</a>
+               </div>
+           </div>
+           <p class="text-gray-700 mt-12">
+               <small><em>(Please replace these with your actual case studies for maximum impact.)</em></small>
+           </p>
+       </div>
+   </section>
+   <div class="section-separator"></div>
+   <!-- Testimonials Section -->
+   <section id="testimonials" class="py-16 md:py-24 bg-white m-4 rounded-xl shadow-lg">
+       <div class="container mx-auto px-6 text-center">
+           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-12">What Our Clients Say</h2>
+           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+               <!-- Testimonial 1 Placeholder -->
+               <div class="bg-gray-50 p-8 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <p class="text-lg text-gray-700 italic mb-6">
+                       "AIWorx transformed our customer service! Response times have plummeted, and our team can now focus on complex issues. Highly recommend their AI solutions."
+                   </p>
+                   <p class="font-semibold text-gray-800">- Jane Doe, CEO of Tech Solutions Inc.</p>
+               </div>
+               <!-- Testimonial 2 Placeholder -->
+               <div class="bg-gray-50 p-8 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <p class="text-lg text-gray-700 italic mb-6">
+                       "The AI automation checklist helped us identify key areas for improvement. AIWorx then delivered a tailored marketing automation system that's truly boosted our ROI."
+                   </p>
+                   <p class="font-semibold text-gray-800">- John Smith, Marketing Director at Growth Co.</p>
+               </div>
+           </div>
+           <p class="text-gray-700 mt-12">
+               <small><em>(Replace these with genuine testimonials from your clients for authenticity.)</em></small>
+           </p>
+       </div>
+   </section>
+   <div class="section-separator"></div>
+   <!-- Overall Benefits Section -->
+   <section id="benefits" class="py-16 md:py-24 bg-gray-100 m-4 rounded-xl shadow-lg">
+       <div class="container mx-auto px-6 text-center">
+           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-12">Unlock Unprecedented Growth with AIWorx</h2>
+           <p class="text-lg text-gray-700 max-w-3xl mx-auto mb-12">
+               By leveraging these AI-driven solutions, service-based businesses can significantly improve their operational efficiency, reduce costs, and enhance overall customer satisfaction while scaling their operations.
+           </p>
+           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+               <!-- Benefit 1 -->
+               <div class="bg-white p-8 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">⚙️</div>
+                   <h3 class="text-xl font-semibold mb-3">Streamlined Operations</h3>
+                   <p class="text-gray-600">Automate repetitive tasks like inventory management and order processing, improving efficiency and handling growth without linear cost increases.</p>
+               </div>
+               <!-- Benefit 2 -->
+               <div class="bg-white p-8 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">💰</div>
+                   <h3 class="text-xl font-semibold mb-3">Cost Reduction</h3>
+                   <p class="text-gray-600">Reduce staffing costs by automating routine customer service and operational tasks, optimizing resource allocation.</p>
+               </div>
+               <!-- Benefit 3 -->
+               <div class="bg-white p-8 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">🌟</div>
+                   <h3 class="text-xl font-semibold mb-3">Enhanced Customer Satisfaction</h3>
+                   <p class="text-gray-600">Provide instant, 24/7 support and personalized interactions, leading to happier, more loyal customers.</p>
+               </div>
+               <!-- Benefit 4 -->
+               <div class="bg-white p-8 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">🚀</div>
+                   <h3 class="text-xl font-semibold mb-3">Improved Scalability</h3>
+                   <p class="text-gray-600">Break the linear growth model; manage increased customer volume and operations without proportionally expanding your team.</p>
+               </div>
+               <!-- Benefit 5 -->
+               <div class="bg-white p-8 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">💡</div>
+                   <h3 class="text-xl font-semibold mb-3">Data-Driven Insights</h3>
+                   <p class="text-gray-600">Process vast datasets to uncover actionable insights, enabling faster, informed decisions and more effective resource allocation.</p>
+               </div>
+               <!-- Benefit 6 -->
+               <div class="bg-white p-8 rounded-xl shadow-md flex flex-col items-center text-center transform hover:scale-105 transition duration-300">
+                   <div class="text-5xl mb-4 gradient-text">🎯</div>
+                   <h3 class="text-xl font-semibold mb-3">Enhanced Lead Generation</h3>
+                   <p class="text-gray-600">Identify high-potential leads and tailor outreach for maximum impact, improving conversion rates without increasing headcount.</p>
+               </div>
+           </div>
+       </div>
+   </section>
+   <div class="section-separator"></div>
+   <!-- Pricing Section -->
+   <section id="pricing" class="py-16 md:py-24 bg-gray-50 m-4 rounded-xl shadow-lg">
+       <div class="container mx-auto px-6 text-center">
+           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-12">Our Flexible Pricing Plans</h2>
+           <p class="text-lg text-gray-700 max-w-3xl mx-auto mb-12">
+               Choose the plan that best fits your business needs and start your AI automation journey today.
+           </p>
+           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+               <!-- Pricing Card 1: Standard -->
+               <div class="bg-white p-0 rounded-xl shadow-lg flex flex-col justify-between transform hover:scale-105 transition duration-300">
+                   <div class="p-4">
+                       <h3 class="text-2xl font-bold gradient-text mb-4">Standard</h3>
+                       <p class="text-gray-600 mb-6">Perfect for small businesses looking to get started with AI automation.</p>
+                       <div class="text-4xl font-extrabold text-gray-900 mb-6">
+                           $649<span class="text-xxs text-gray-500">/month</span>
+                       </div>
+                       <ul class="text-left text-gray-700 text-base space-y-2 mb-8">
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> AI Chatbot & Email Assistant</li>
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Basic Review Management</li>
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Basic SEO Optimization</li>
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Basic Marketing Analytics</li>
+                           <li class="flex items-center text-gray-400"><span class="text-gray-400 mr-2">✖</span> AI Voice Assistant</li>
+                           <li class="flex items-center text-gray-400"><span class="text-gray-400 mr-2">✖</span> Advanced Content Generation</li>
+                           <li class="flex items-center text-gray-400"><span class="text-gray-400 mr-2">✖</span> Dedicated AI Consultant</li>
+                       </ul>
+                   </div>
+                   <a href="mailto:info@aiworx.agency?subject=Inquiry%20about%20Standard%20Plan" class="gradient-button text-white font-semibold py-2 px-5 rounded-full shadow-md">
+                       Choose Standard
+                   </a>
+               </div>
+               <!-- Pricing Card 2: Premium (Now consistent with others) -->
+               <div class="bg-white p-0 rounded-xl shadow-lg flex flex-col justify-between transform hover:scale-105 transition duration-300">
+                   <div class="p-4">
+                       <h3 class="text-2xl font-bold gradient-text mb-4">Premium</h3>
+                       <p class="text-gray-600 mb-6">Ideal for growing businesses seeking comprehensive AI solutions.</p>
+                       <div class="text-4xl font-extrabold text-gray-900 mb-6">
+                           $1099<span class="text-xxs text-gray-500">/month</span>
+                       </div>
+                       <ul class="text-left text-gray-700 text-base space-y-2 mb-8">
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> All Standard Features</li>
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> AI Voice Assistant</li>
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Advanced SEO & Content Generation</li>
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Social Media Management</li>
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Predictive Analytics</li>
+                           <li class="flex items-center text-gray-400"><span class="text-gray-400 mr-2">✖</span> Dedicated AI Consultant</li>
+                           <li class="flex items-center text-gray-400"><span class="text-gray-400 mr-2">✖</span> On-site Integration</li>
+                       </ul>
+                   </div>
+                   <a href="mailto:info@aiworx.agency?subject=Inquiry%20about%20Premium%20Plan" class="gradient-button text-white font-semibold py-2 px-5 rounded-full shadow-md">
+                       Choose Premium
+                   </a>
+               </div>
+               <!-- Pricing Card 3: Enterprise -->
+               <div class="bg-white p-0 rounded-xl shadow-lg flex flex-col justify-between transform hover:scale-105 transition duration-300">
+                   <div class="p-4">
+                       <h3 class="text-2xl font-bold gradient-text mb-4">Enterprise</h3>
+                       <p class="text-gray-600 mb-6">For large organizations requiring custom, scalable AI solutions.</p>
+                       <div class="text-4xl font-extrabold text-gray-900 mb-6">
+                           $1649<span class="text-xxs text-gray-500">/month</span>
+                       </div>
+                       <ul class="text-left text-gray-700 text-base space-y-2 mb-8">
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> All Premium Features</li>
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Custom AI Solutions</li>
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Dedicated AI Consultant</li>
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Priority Support</li>
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> On-site Integration</li>
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Advanced Data Analytics</li>
+                           <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Custom Reporting</li>
+                       </ul>
+                   </div>
+                   <a href="mailto:info@aiworx.agency?subject=Inquiry%20about%20Enterprise%20Plan" class="gradient-button text-white font-semibold py-2 px-5 rounded-full shadow-md">
+                       Choose Enterprise
+                   </a>
+               </div>
+           </div>
+       </div>
+   </section>
+   <!-- Call to Action / Contact Section -->
+   <section id="contact" class="gradient-bg text-white py-16 md:py-24 m-4 rounded-xl shadow-xl">
+       <div class="container mx-auto px-6 text-center max-w-3xl">
+           <h2 class="text-3xl md:text-4xl font-bold mb-8">Ready to Transform Your Business with AI?</h2>
+           <p class="text-lg md:text-xl mb-10 opacity-90">
+               Stop spending too much time on repetitive tasks and start focusing on growth. Let AIWorx help you implement strategic AI solutions for sustainable success.
+           </p>
+           <a href="mailto:info@aiworx.agency" class="bg-white text-purple-700 hover:bg-purple-100 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 inline-block">
+               Schedule Your Free Consultation Today!
+           </a>
+       </div>
+   </section>
+   <!-- Footer -->
+   <footer class="bg-gray-800 text-white py-8 px-6 md:px-12 rounded-t-xl">
+       <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+           <!-- Column 1: Copyright -->
+           <div class="text-center md:text-left">
+               <p>&copy; 2025 AIWorx. All rights reserved.</p>
+           </div>
+           <!-- Column 2: Services -->
+           <div class="text-center md:text-left">
+               <h3 class="text-xl font-semibold mb-4">Services</h3>
+               <ul class="space-y-2">
+                   <li><a href="#" class="hover:text-teal-400 transition duration-300">AI Automation</a></li>
+                   <li><a href="#" class="hover:text-teal-400 transition duration-300">Chatbot Development</a></li>
+                   <li><a href="#" class="hover:text-teal-400 transition duration-300">AI Consulting</a></li>
+                   <li><a href="#" class="hover:text-teal-400 transition duration-300">Use Case Discovery</a></li>
+               </ul>
+           </div>
+           <!-- Column 3: Company -->
+           <div class="text-center md:text-left">
+               <h3 class="text-xl font-semibold mb-4">Company</h3>
+               <ul class="space-y-2">
+                   <li><a href="#" class="hover:text-teal-400 transition duration-300">About</a></li>
+                   <li><a href="#" class="hover:text-teal-400 transition duration-300">Blog</a></li>
+                   <li><a href="#" class="hover:text-teal-400 transition duration-300">Privacy Policy</a></li>
+                   <li><a href="#" class="hover:text-teal-400 transition duration-300">Terms of Service</a></li>
+                   <li><a href="#" class="hover:text-teal-400 transition duration-300">Imprint</a></li>
+                   <li><a href="#" class="hover:text-teal-400 transition duration-300">Contact Us</a></li>
+               </ul>
+           </div>
+       </div>
+   </footer>
 </body>
 </html>
+
